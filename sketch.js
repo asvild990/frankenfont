@@ -33,7 +33,7 @@ function getTextHeight() {
   for (let font of fonts) {
     offscreen.textFont(font);
     offscreen.textSize(canvasW);
-    offscreen.textSize(canvasW * canvasW / offscreen.textWidth(message));
+    offscreen.textSize(0.90 * canvasW * canvasW / offscreen.textWidth(message));
     maxHeight = max(maxHeight, offscreen.textAscent());
   }
   h = maxHeight;
@@ -59,7 +59,7 @@ function getSector(row, col) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(CENTER, CENTER);
   pg.textSize(canvasW);
-  pg.textSize(canvasW * canvasW / pg.textWidth(message));
+  pg.textSize(0.90 * canvasW * canvasW / pg.textWidth(message));
   pg.text(message, canvasW / 2 - col * cellW, h / 2 - row * cellH);
   return pg;
 }
