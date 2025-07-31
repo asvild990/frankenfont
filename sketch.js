@@ -57,7 +57,7 @@ function getSector(row, col) {
   let cellW = canvasW / cols;
   let cellH = h / rows;
   let pg = createGraphics(cellW, cellH);
-  pg.fill("white");
+  pg.fill("black");
   pg.noStroke();
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
