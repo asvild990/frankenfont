@@ -4,7 +4,7 @@ let cols = 20;
 let rows = 11;
 let fontGrid = [];
 let canvasW = 980;
-let canvasH = 900;
+let canvasH = 800;
 let h; // full text height
 let offscreen;
 
