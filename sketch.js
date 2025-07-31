@@ -41,34 +41,39 @@ function getTextHeight() {
 
 function drawGrid() {
   background("#F3F3F3");
-  let cellW = canvasW / cols;
-  let cellH = h / rows;
+  let cellSize = min(canvasW / cols, canvasH / rows);
+  let offsetX = (canvasW - cols * cellSize) / 2;
+  let offsetY = (canvasH - rows * cellSize) / 2;
+
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
-      let tile = getSector(j, i);
-      image(tile, i * cellW, canvasH / 2 - h / 2 + j * cellH, cellW, cellH);
+      let tile = getSector(j, i, cellSize);
+      image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
+
+      // Add visible grid lines
+      stroke(0, 25); // light black
+      noFill();
+      rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
     }
   }
 }
 
-function getSector(row, col) {
-  let cellW = canvasW / cols;
-  let cellH = h / rows;
-  let pg = createGraphics(cellW, cellH);
+function getSector(row, col, cellSize) {
+  let pg = createGraphics(cellSize, cellSize);
   pg.fill("black");
   pg.textFont(fontGrid[row][col]);
-  pg.textAlign(CENTER, CENTER);
-  pg.textSize(canvasW);
+  pg.textAlign(LEFT, TOP);
   pg.textSize(0.88 * canvasW * canvasW / pg.textWidth(message));
-  pg.text(message, canvasW / 2 - col * cellW, h / 2 - row * cellH);
+  pg.text(message, -col * cellSize, -row * cellSize);
   return pg;
 }
 
 function mousePressed() {
-  let cellW = canvasW / cols;
-  let cellH = h / rows;
-  let col = floor(mouseX / cellW);
-  let row = floor((mouseY - (canvasH / 2 - h / 2)) / cellH);
+  let cellSize = min(canvasW / cols, canvasH / rows);
+  let offsetX = (canvasW - cols * cellSize) / 2;
+  let offsetY = (canvasH - rows * cellSize) / 2;
+  let col = floor((mouseX - offsetX) / cellSize);
+  let row = floor((mouseY - offsetY) / cellSize);
 
   let radius = 2;
   for (let j = -radius; j <= radius; j++) {
