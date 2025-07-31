@@ -1,7 +1,7 @@
 // Adapted p5.js sketch
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
 let message = "Visual\nSystems";
-let cols = 21;
+let cols = 24;
 let rows = 16;
 let fontGrid = [];
 let canvasW = 980;
@@ -33,7 +33,7 @@ function getTextHeight() {
   for (let font of fonts) {
     offscreen.textFont(font);
     offscreen.textSize(canvasW);
-    offscreen.textSize(0.90 * canvasW * canvasW / offscreen.textWidth(message));
+    offscreen.textSize(0.8 * canvasW * canvasW / offscreen.textWidth(message));
     maxHeight = max(maxHeight, offscreen.textAscent());
   }
   h = maxHeight;
@@ -59,7 +59,7 @@ function getSector(row, col) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(CENTER, CENTER);
   pg.textSize(canvasW);
-  pg.textSize(0.90 * canvasW * canvasW / pg.textWidth(message));
+  pg.textSize(0.80 * canvasW * canvasW / pg.textWidth(message));
   pg.text(message, canvasW / 2 - col * cellW, h / 2 - row * cellH);
   return pg;
 }
