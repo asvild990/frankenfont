@@ -2,7 +2,7 @@
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
 let message = "Visual\nSystems";
 let cols = 20;
-let rows = 14;
+let rows = 16;
 let fontGrid = [];
 let canvasW = 980;
 let canvasH = 800;
