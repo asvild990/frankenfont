@@ -1,4 +1,3 @@
-// Adapted p5.js sketch
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
 let message = "Visual\nSystems";
 let cols = 20;
@@ -12,7 +11,7 @@ let offscreen;
 function setup() {
   createCanvas(canvasW, canvasH);
   offscreen = createGraphics(canvasW, canvasH);
-  offscreen.textAlign(CENTER, CENTER);
+  offscreen.textAlign(LEFT, TOP); // Not actually used now, but for safety
   initFontGrid();
   getTextHeight();
   noLoop();
@@ -32,21 +31,24 @@ function getTextHeight() {
   let maxHeight = 0;
   for (let font of fonts) {
     offscreen.textFont(font);
-    offscreen.textSize(canvasW);
     offscreen.textSize(canvasW * canvasW / offscreen.textWidth(message));
     maxHeight = max(maxHeight, offscreen.textAscent());
   }
-  h = maxHeight;
+  h = maxHeight * 1.2 * 2; // add some leading
 }
 
 function drawGrid() {
   background("#F3F3F3");
   let cellW = canvasW / cols;
   let cellH = h / rows;
+  stroke(0);
+  strokeWeight(0.5);
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
       let tile = getSector(j, i);
       image(tile, i * cellW, canvasH / 2 - h / 2 + j * cellH, cellW, cellH);
+      noFill();
+      rect(i * cellW, canvasH / 2 - h / 2 + j * cellH, cellW, cellH);
     }
   }
 }
@@ -56,11 +58,12 @@ function getSector(row, col) {
   let cellH = h / rows;
   let pg = createGraphics(cellW, cellH);
   pg.fill("white");
+  pg.noStroke();
   pg.textFont(fontGrid[row][col]);
-  pg.textAlign(CENTER, CENTER);
-  pg.textSize(canvasW);
+  pg.textAlign(LEFT, TOP);
   pg.textSize(canvasW * canvasW / pg.textWidth(message));
-  pg.text(message, canvasW / 2 - col * cellW, h / 2 - row * cellH);
+  pg.textLeading(pg.textSize() * 1.2);
+  pg.text(message, -col * cellW, -row * cellH);
   return pg;
 }
 
