@@ -1,5 +1,5 @@
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
-let message = "Visual\nSystems";
+let message = "Form &\nFunction";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
