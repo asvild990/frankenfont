@@ -1,4 +1,3 @@
-// Adapted p5.js sketch
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
 let message = "Visual\nSystems";
 let cols = 24;
@@ -6,13 +5,13 @@ let rows = 18;
 let fontGrid = [];
 let canvasW = 980;
 let canvasH = 800;
-let h; // full text height
+let textSizeValue;
 let offscreen;
 
 function setup() {
   createCanvas(canvasW, canvasH);
   offscreen = createGraphics(canvasW, canvasH);
-  offscreen.textAlign(CENTER, CENTER);
+  offscreen.textAlign(LEFT, TOP);
   initFontGrid();
   getTextHeight();
   noLoop();
@@ -29,14 +28,11 @@ function initFontGrid() {
 }
 
 function getTextHeight() {
-  let maxHeight = 0;
-  for (let font of fonts) {
-    offscreen.textFont(font);
-    let scale = canvasW * 0.6;
-    offscreen.textSize(scale / offscreen.textWidth(message) * canvasW);
-    maxHeight = max(maxHeight, offscreen.textAscent());
-  }
-  h = maxHeight * 2; // Leave space for two lines of text
+  // Use a predictable baseline font for sizing
+  offscreen.textFont("Futura");
+  // Adjust to a safe fraction of the canvas — not too zoomed in
+  textSizeValue = canvasW * 0.12;
+  offscreen.textSize(textSizeValue);
 }
 
 function drawGrid() {
@@ -50,8 +46,7 @@ function drawGrid() {
       let tile = getSector(j, i, cellSize);
       image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
 
-      // Grid lines (very light)
-      stroke(0, 25);
+      stroke(0, 25); // grid lines
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
     }
@@ -63,8 +58,9 @@ function getSector(row, col, cellSize) {
   pg.fill("black");
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
-  let scale = canvasW * 0.6;
-  pg.textSize(scale / pg.textWidth(message) * canvasW);
+  pg.textSize(textSizeValue);
+
+  // Draw the text offset by the cell grid to slice the composite layout
   pg.text(message, -col * cellSize, -row * cellSize);
   return pg;
 }
