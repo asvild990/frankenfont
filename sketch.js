@@ -32,7 +32,7 @@ function getTextHeight() {
   let maxHeight = 0;
   for (let font of fonts) {
     offscreen.textFont(font);
-    let sizeFactor = 0.33; // ADJUST THIS to control overall text size
+    let sizeFactor = 0.15; // ADJUST THIS to control overall text size
     offscreen.textSize(sizeFactor * canvasW * canvasW / offscreen.textWidth(message));
     maxHeight = max(maxHeight, offscreen.textAscent());
   }
@@ -63,7 +63,7 @@ function getSector(row, col, cellSize) {
   pg.fill("black");
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
-  let sizeFactor = 0.33; // Match the sizeFactor from getTextHeight
+  let sizeFactor = 0.15; // Match the sizeFactor from getTextHeight
   pg.textSize(sizeFactor * canvasW * canvasW / pg.textWidth(message));
   pg.text(message, -col * cellSize, -row * cellSize);
   return pg;
