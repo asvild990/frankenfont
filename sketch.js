@@ -31,7 +31,7 @@ function getTextHeight() {
   // Use a predictable baseline font for sizing
   offscreen.textFont("Futura");
   // Adjust to a safe fraction of the canvas — not too zoomed in
-  textSizeValue = canvasW * 0.12;
+  textSizeValue = canvasW * 0.20;
   offscreen.textSize(textSizeValue);
 }
 
