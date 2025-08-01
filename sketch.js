@@ -32,11 +32,11 @@ function getTextHeight() {
   let maxHeight = 0;
   for (let font of fonts) {
     offscreen.textFont(font);
-    offscreen.textSize(canvasW);
-    offscreen.textSize(0.50 * canvasW * canvasW / offscreen.textWidth(message));
+    let sizeFactor = 0.33; // ADJUST THIS to control overall text size
+    offscreen.textSize(sizeFactor * canvasW * canvasW / offscreen.textWidth(message));
     maxHeight = max(maxHeight, offscreen.textAscent());
   }
-  h = maxHeight;
+  h = maxHeight * 2; // Multiply to give space for two lines of text
 }
 
 function drawGrid() {
@@ -50,8 +50,8 @@ function drawGrid() {
       let tile = getSector(j, i, cellSize);
       image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
 
-      // Add visible grid lines
-      stroke(0, 25); // light black
+      // Grid lines (very light)
+      stroke(0, 25);
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
     }
@@ -63,7 +63,8 @@ function getSector(row, col, cellSize) {
   pg.fill("black");
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
-  pg.textSize(0.50 * canvasW * canvasW / pg.textWidth(message));
+  let sizeFactor = 0.33; // Match the sizeFactor from getTextHeight
+  pg.textSize(sizeFactor * canvasW * canvasW / pg.textWidth(message));
   pg.text(message, -col * cellSize, -row * cellSize);
   return pg;
 }
