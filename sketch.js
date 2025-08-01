@@ -8,6 +8,10 @@ let canvasH = 800;
 let textSizeValue;
 let offscreen;
 
+// 💡 Adjustable nudging
+let xNudgeCells = 2;
+let yNudgeCells = 3.5;
+
 function setup() {
   createCanvas(canvasW, canvasH);
   offscreen = createGraphics(canvasW, canvasH);
@@ -28,9 +32,7 @@ function initFontGrid() {
 }
 
 function getTextHeight() {
-  // Use a predictable baseline font for sizing
   offscreen.textFont("Futura");
-  // Adjust to a safe fraction of the canvas — not too zoomed in
   textSizeValue = canvasW * 0.20;
   offscreen.textSize(textSizeValue);
 }
@@ -60,8 +62,11 @@ function getSector(row, col, cellSize) {
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
 
-  // Draw the text offset by the cell grid to slice the composite layout
-  pg.text(message, -col * cellSize, -row * cellSize);
+  // Apply nudge in cells
+  let nudgeX = (col - xNudgeCells) * cellSize;
+  let nudgeY = (row - yNudgeCells) * cellSize;
+
+  pg.text(message, -nudgeX, -nudgeY);
   return pg;
 }
 
