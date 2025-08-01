@@ -10,7 +10,7 @@ let offscreen;
 
 // 💡 Adjustable nudging
 let xNudgeCells = 2;
-let yNudgeCells = 5;
+let yNudgeCells = 4;
 
 function setup() {
   createCanvas(canvasW, canvasH);
