@@ -3,8 +3,8 @@ let message = "Form &\nFunction";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
-let canvasW = 980;
-let canvasH = 800;
+let canvasW;
+let canvasH;
 let textSizeValue;
 let offscreen;
 
@@ -13,6 +13,8 @@ let xNudgeCells = 2;
 let yNudgeCells = 4;
 
 function setup() {
+  canvasW = windowWidth;
+  canvasH = windowHeight;
   createCanvas(canvasW, canvasH);
   offscreen = createGraphics(canvasW, canvasH);
   offscreen.textAlign(LEFT, TOP);
@@ -91,6 +93,10 @@ function mousePressed() {
 }
 
 function windowResized() {
+  canvasW = windowWidth;
+  canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
+  offscreen = createGraphics(canvasW, canvasH);
+  getTextHeight();
   drawGrid();
 }
