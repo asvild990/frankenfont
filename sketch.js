@@ -120,7 +120,7 @@ function windowResized() {
 }
 
 function autoRandomize() {
-  let count = floor(random(24, 36)); // change n cells per interval
+  let count = floor(random(36, 48)); // change n cells per interval
   for (let n = 0; n < count; n++) {
     let i = floor(random(cols));
     let j = floor(random(rows));
