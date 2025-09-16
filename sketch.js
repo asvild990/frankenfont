@@ -9,8 +9,8 @@ let textSizeValue;
 let offscreen;
 
 // 💡 Adjustable nudging
-let xNudgeCells = 2;
-let yNudgeCells = 4;
+let xNudgeCells = 4;
+let yNudgeCells = 8;
 
 // 🌀 Hover & auto-cycle features
 let freezeMap = [];
