@@ -14,7 +14,7 @@ let yNudgeCells = 8;
 
 // 🌀 Hover & auto-cycle features
 let freezeMap = [];
-let autoChangeInterval = 8500; // in ms
+let autoChangeInterval = 700; // in ms
 let freezeRadius = 6;
 
 function setup() {
