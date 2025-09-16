@@ -9,12 +9,12 @@ let textSizeValue;
 let offscreen;
 
 // 💡 Adjustable nudging
-let xNudgeCells = 4;
-let yNudgeCells = 8;
+let xNudgeCells = 2;
+let yNudgeCells = 4;
 
 // 🌀 Hover & auto-cycle features
 let freezeMap = [];
-let autoChangeInterval = 700; // in ms
+let autoChangeInterval = 000; // in ms
 let freezeRadius = 6;
 
 function setup() {
