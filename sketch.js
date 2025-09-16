@@ -12,6 +12,11 @@ let offscreen;
 let xNudgeCells = 2;
 let yNudgeCells = 4;
 
+// 🌀 Hover & auto-cycle features
+let freezeMap = [];
+let autoChangeInterval = 1000; // in ms
+let freezeRadius = 2;
+
 function setup() {
   canvasW = windowWidth;
   canvasH = windowHeight;
@@ -20,8 +25,10 @@ function setup() {
   offscreen.textAlign(LEFT, TOP);
   initFontGrid();
   getTextHeight();
+  initFreezeMap();
   noLoop();
   drawGrid();
+  setInterval(autoRandomize, autoChangeInterval);
 }
 
 function initFontGrid() {
@@ -29,6 +36,15 @@ function initFontGrid() {
     fontGrid[j] = [];
     for (let i = 0; i < cols; i++) {
       fontGrid[j][i] = random(fonts);
+    }
+  }
+}
+
+function initFreezeMap() {
+  for (let j = 0; j < rows; j++) {
+    freezeMap[j] = [];
+    for (let i = 0; i < cols; i++) {
+      freezeMap[j][i] = false;
     }
   }
 }
@@ -44,6 +60,8 @@ function drawGrid() {
   let cellSize = min(canvasW / cols, canvasH / rows);
   let offsetX = (canvasW - cols * cellSize) / 2;
   let offsetY = (canvasH - rows * cellSize) / 2;
+
+  updateFreezeMap(cellSize, offsetX, offsetY);
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
@@ -99,4 +117,27 @@ function windowResized() {
   offscreen = createGraphics(canvasW, canvasH);
   getTextHeight();
   drawGrid();
+}
+
+function autoRandomize() {
+  let count = floor(random(3, 6)); // change 3–5 cells per interval
+  for (let n = 0; n < count; n++) {
+    let i = floor(random(cols));
+    let j = floor(random(rows));
+    if (!freezeMap[j][i]) {
+      fontGrid[j][i] = random(fonts);
+    }
+  }
+  drawGrid();
+}
+
+function updateFreezeMap(cellSize, offsetX, offsetY) {
+  for (let j = 0; j < rows; j++) {
+    for (let i = 0; i < cols; i++) {
+      let x = offsetX + i * cellSize + cellSize / 2;
+      let y = offsetY + j * cellSize + cellSize / 2;
+      let d = dist(mouseX, mouseY, x, y);
+      freezeMap[j][i] = d < cellSize * freezeRadius;
+    }
+  }
 }
