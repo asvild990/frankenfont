@@ -25,8 +25,8 @@ function setup() {
   initFontGrid();
   getTextHeight();
   initFreezeMap();
-  noLoop();
-  drawGrid();
+  frameRate(12); // controls how fast randomization happens
+  loop(); // make sure draw() keeps running
 }
 
 function initFontGrid() {
@@ -51,6 +51,29 @@ function getTextHeight() {
   offscreen.textFont("Futura");
   textSizeValue = canvasW * 0.20;
   offscreen.textSize(textSizeValue);
+}
+
+function draw() {
+  let cellSize = min(canvasW / cols, canvasH / rows);
+  let offsetX = (canvasW - cols * cellSize) / 2;
+  let offsetY = (canvasH - rows * cellSize) / 2;
+
+  // Cursor position converted to grid cell
+  let col = floor((mouseX - offsetX) / cellSize);
+  let row = floor((mouseY - offsetY) / cellSize);
+
+  // Only randomize within bounds
+  for (let j = -freezeRadius; j <= freezeRadius; j++) {
+    for (let i = -freezeRadius; i <= freezeRadius; i++) {
+      let ni = col + i;
+      let nj = row + j;
+      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
+        fontGrid[nj][ni] = random(fonts);
+      }
+    }
+  }
+
+  drawGrid();
 }
 
 function drawGrid() {
@@ -97,33 +120,6 @@ function mousePressed() {
         freezeMap[nj][ni] = true;
       }
     }
-  }
-
-  drawGrid();
-}
-
-function mouseMoved() {
-  let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 5;
-  let offsetY = (canvasH - rows * cellSize) / 5;
-  let col = floor((mouseX - offsetX) / cellSize);
-  let row = floor((mouseY - offsetY) / cellSize);
-  let radius = 2;
-  let changed = false;
-
-  for (let j = -radius; j <= radius; j++) {
-    for (let i = -radius; i <= radius; i++) {
-      let ni = col + i;
-      let nj = row + j;
-      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
-        fontGrid[nj][ni] = random(fonts);
-        changed = true;
-      }
-    }
-  }
-
-  if (changed) {
-    drawGrid();
   }
 }
 
