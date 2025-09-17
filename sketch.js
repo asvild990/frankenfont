@@ -18,7 +18,7 @@ function setup() {
   initFontGrid();
   getTextHeight();
   initFreezeMap();
-  frameRate(6);
+  frameRate(4);
 }
 
 function initFontGrid() {
