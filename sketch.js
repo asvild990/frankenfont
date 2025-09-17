@@ -8,9 +8,11 @@ let canvasH;
 let textSizeValue;
 let offscreen;
 
+// 💡 Adjustable nudging
 let xNudgeCells = 2;
 let yNudgeCells = 4;
 
+// ❄️ Click-freeze system
 let freezeMap = [];
 let freezeRadius = 2;
 
@@ -86,10 +88,9 @@ function mousePressed() {
   let offsetY = (canvasH - rows * cellSize) / 2;
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
-  let radius = freezeRadius;
 
-  for (let j = -radius; j <= radius; j++) {
-    for (let i = -radius; i <= radius; i++) {
+  for (let j = -freezeRadius; j <= freezeRadius; j++) {
+    for (let i = -freezeRadius; i <= freezeRadius; i++) {
       let ni = col + i;
       let nj = row + j;
       if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
@@ -103,28 +104,27 @@ function mousePressed() {
 
 function mouseMoved() {
   let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 2;
-  let offsetY = (canvasH - rows * cellSize) / 2;
+  let offsetX = (canvasW - cols * cellSize) / 5;
+  let offsetY = (canvasH - rows * cellSize) / 5;
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
-  let radius = 1;
-
+  let radius = 2;
   let changed = false;
 
   for (let j = -radius; j <= radius; j++) {
     for (let i = -radius; i <= radius; i++) {
       let ni = col + i;
       let nj = row + j;
-      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
-        if (!freezeMap[nj][ni]) {
-          fontGrid[nj][ni] = random(fonts);
-          changed = true;
-        }
+      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
+        fontGrid[nj][ni] = random(fonts);
+        changed = true;
       }
     }
   }
 
-  if (changed) drawGrid();
+  if (changed) {
+    drawGrid();
+  }
 }
 
 function windowResized() {
