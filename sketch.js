@@ -3,30 +3,22 @@ let message = "Form &\nFunction";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
-let canvasW;
-let canvasH;
-let textSizeValue;
-let offscreen;
-
-// 💡 Adjustable nudging
+let canvasW, canvasH, textSizeValue;
 let xNudgeCells = 2;
 let yNudgeCells = 4;
-
-// ❄️ Click-freeze system
 let freezeMap = [];
 let freezeRadius = 2;
+let liveCycleRadius = 5;
 
 function setup() {
   canvasW = windowWidth;
   canvasH = windowHeight;
   createCanvas(canvasW, canvasH);
-  offscreen = createGraphics(canvasW, canvasH);
-  offscreen.textAlign(LEFT, TOP);
+  textAlign(LEFT, TOP);
   initFontGrid();
   getTextHeight();
   initFreezeMap();
-  frameRate(12); // controls how fast randomization happens
-  loop(); // make sure draw() keeps running
+  frameRate(12);
 }
 
 function initFontGrid() {
@@ -48,9 +40,9 @@ function initFreezeMap() {
 }
 
 function getTextHeight() {
-  offscreen.textFont("Futura");
+  textFont("Futura");
   textSizeValue = canvasW * 0.20;
-  offscreen.textSize(textSizeValue);
+  textSize(textSizeValue);
 }
 
 function draw() {
@@ -58,13 +50,12 @@ function draw() {
   let offsetX = (canvasW - cols * cellSize) / 2;
   let offsetY = (canvasH - rows * cellSize) / 2;
 
-  // Cursor position converted to grid cell
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
 
-  // Only randomize within bounds
-  for (let j = -freezeRadius; j <= freezeRadius; j++) {
-    for (let i = -freezeRadius; i <= freezeRadius; i++) {
+  // Live-cycle: continually randomize within cursor zone
+  for (let j = -liveCycleRadius; j <= liveCycleRadius; j++) {
+    for (let i = -liveCycleRadius; i <= liveCycleRadius; i++) {
       let ni = col + i;
       let nj = row + j;
       if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
@@ -86,7 +77,7 @@ function drawGrid() {
     for (let i = 0; i < cols; i++) {
       let tile = getSector(j, i, cellSize);
       image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
-      stroke(0, 25); // grid lines
+      stroke(0, 25);
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
     }
@@ -127,7 +118,6 @@ function windowResized() {
   canvasW = windowWidth;
   canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
-  offscreen = createGraphics(canvasW, canvasH);
   getTextHeight();
   drawGrid();
 }
