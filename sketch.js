@@ -8,7 +8,7 @@ let xNudgeCells = 2;
 let yNudgeCells = 4;
 let freezeMap = [];
 let freezeRadius = 2;
-let liveCycleRadius = 3;
+let liveCycleRadius = 2;
 
 function setup() {
   canvasW = windowWidth;
