@@ -8,13 +8,10 @@ let canvasH;
 let textSizeValue;
 let offscreen;
 
-// 💡 Adjustable nudging
 let xNudgeCells = 2;
 let yNudgeCells = 4;
 
-// ❄️ Click-freeze system (no hover freeze)
 let freezeMap = [];
-let autoChangeInterval = 000; // in ms
 let freezeRadius = 2;
 
 function setup() {
@@ -28,7 +25,6 @@ function setup() {
   initFreezeMap();
   noLoop();
   drawGrid();
-  setInterval(autoRandomize, autoChangeInterval);
 }
 
 function initFontGrid() {
@@ -90,7 +86,7 @@ function mousePressed() {
   let offsetY = (canvasH - rows * cellSize) / 2;
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
-  let radius = 2;
+  let radius = freezeRadius;
 
   for (let j = -radius; j <= radius; j++) {
     for (let i = -radius; i <= radius; i++) {
@@ -105,23 +101,37 @@ function mousePressed() {
   drawGrid();
 }
 
+function mouseMoved() {
+  let cellSize = min(canvasW / cols, canvasH / rows);
+  let offsetX = (canvasW - cols * cellSize) / 2;
+  let offsetY = (canvasH - rows * cellSize) / 2;
+  let col = floor((mouseX - offsetX) / cellSize);
+  let row = floor((mouseY - offsetY) / cellSize);
+  let radius = 1;
+
+  let changed = false;
+
+  for (let j = -radius; j <= radius; j++) {
+    for (let i = -radius; i <= radius; i++) {
+      let ni = col + i;
+      let nj = row + j;
+      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
+        if (!freezeMap[nj][ni]) {
+          fontGrid[nj][ni] = random(fonts);
+          changed = true;
+        }
+      }
+    }
+  }
+
+  if (changed) drawGrid();
+}
+
 function windowResized() {
   canvasW = windowWidth;
   canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
   offscreen = createGraphics(canvasW, canvasH);
   getTextHeight();
-  drawGrid();
-}
-
-function autoRandomize() {
-  let count = floor(random(36, 48)); // change n cells per interval
-  for (let n = 0; n < count; n++) {
-    let i = floor(random(cols));
-    let j = floor(random(rows));
-    if (!freezeMap[j][i]) {
-      fontGrid[j][i] = random(fonts);
-    }
-  }
   drawGrid();
 }
