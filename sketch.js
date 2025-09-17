@@ -90,11 +90,16 @@ function getSector(row, col, cellSize) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
+
+  // optimize multiline rendering
+  pg.textLeading(textSizeValue * 1.2); // 1.2x line height for smoother spacing
+
   let nudgeX = (col - xNudgeCells) * cellSize;
   let nudgeY = (row - yNudgeCells) * cellSize;
   pg.text(message, -nudgeX, -nudgeY);
   return pg;
 }
+
 
 function mousePressed() {
   let cellSize = min(canvasW / cols, canvasH / rows);
