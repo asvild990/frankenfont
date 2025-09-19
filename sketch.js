@@ -9,6 +9,8 @@ let yNudgeCells = 4;
 let freezeMap = [];
 let freezeRadius = 2;
 let liveCycleRadius = 2;
+let dirtyMap = [];
+let tileCache = [];
 
 function setup() {
   canvasW = windowWidth;
@@ -18,14 +20,17 @@ function setup() {
   initFontGrid();
   getTextHeight();
   initFreezeMap();
+  initDirtyMap();
   frameRate(4);
 }
 
 function initFontGrid() {
   for (let j = 0; j < rows; j++) {
     fontGrid[j] = [];
+    tileCache[j] = [];
     for (let i = 0; i < cols; i++) {
       fontGrid[j][i] = random(fonts);
+      tileCache[j][i] = null; // Empty cache
     }
   }
 }
@@ -35,6 +40,15 @@ function initFreezeMap() {
     freezeMap[j] = [];
     for (let i = 0; i < cols; i++) {
       freezeMap[j][i] = false;
+    }
+  }
+}
+
+function initDirtyMap() {
+  for (let j = 0; j < rows; j++) {
+    dirtyMap[j] = [];
+    for (let i = 0; i < cols; i++) {
+      dirtyMap[j][i] = true; // Draw everything at the start
     }
   }
 }
@@ -60,6 +74,7 @@ function draw() {
       let nj = row + j;
       if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
         fontGrid[nj][ni] = random(fonts);
+        dirtyMap[nj][ni] = true; // Mark for redraw
       }
     }
   }
@@ -75,8 +90,11 @@ function drawGrid() {
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
-      let tile = getSector(j, i, cellSize);
-      image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
+      if (dirtyMap[j][i] || tileCache[j][i] == null) {
+        tileCache[j][i] = getSector(j, i, cellSize);
+        dirtyMap[j][i] = false;
+      }
+      image(tileCache[j][i], offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
       stroke(0, 25);
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
@@ -90,16 +108,13 @@ function getSector(row, col, cellSize) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
-
-  // optimize multiline rendering
-  pg.textLeading(textSizeValue * 1.2); // 1.2x line height for smoother spacing
+  pg.textLeading(textSizeValue * 1.2); // spacing for multiline
 
   let nudgeX = (col - xNudgeCells) * cellSize;
   let nudgeY = (row - yNudgeCells) * cellSize;
   pg.text(message, -nudgeX, -nudgeY);
   return pg;
 }
-
 
 function mousePressed() {
   let cellSize = min(canvasW / cols, canvasH / rows);
@@ -124,5 +139,5 @@ function windowResized() {
   canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
   getTextHeight();
-  drawGrid();
+  initDirtyMap(); // Redraw all tiles
 }
