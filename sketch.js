@@ -9,8 +9,6 @@ let yNudgeCells = 4;
 let freezeMap = [];
 let freezeRadius = 2;
 let liveCycleRadius = 2;
-let dirtyMap = [];
-let tileCache = [];
 
 function setup() {
   canvasW = windowWidth;
@@ -20,17 +18,14 @@ function setup() {
   initFontGrid();
   getTextHeight();
   initFreezeMap();
-  initDirtyMap();
   frameRate(4);
 }
 
 function initFontGrid() {
   for (let j = 0; j < rows; j++) {
     fontGrid[j] = [];
-    tileCache[j] = [];
     for (let i = 0; i < cols; i++) {
       fontGrid[j][i] = random(fonts);
-      tileCache[j][i] = null; // Empty cache
     }
   }
 }
@@ -40,15 +35,6 @@ function initFreezeMap() {
     freezeMap[j] = [];
     for (let i = 0; i < cols; i++) {
       freezeMap[j][i] = false;
-    }
-  }
-}
-
-function initDirtyMap() {
-  for (let j = 0; j < rows; j++) {
-    dirtyMap[j] = [];
-    for (let i = 0; i < cols; i++) {
-      dirtyMap[j][i] = true; // Draw everything at the start
     }
   }
 }
@@ -67,14 +53,18 @@ function draw() {
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
 
-  // Live-cycle: continually randomize within cursor zone
+  // Live-cycle: continually randomize fonts near cursor, but not all at once
   for (let j = -liveCycleRadius; j <= liveCycleRadius; j++) {
     for (let i = -liveCycleRadius; i <= liveCycleRadius; i++) {
       let ni = col + i;
       let nj = row + j;
-      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
+      if (
+        ni >= 0 && ni < cols &&
+        nj >= 0 && nj < rows &&
+        !freezeMap[nj][ni] &&
+        random(1) < 0.5  // 50% chance to update
+      ) {
         fontGrid[nj][ni] = random(fonts);
-        dirtyMap[nj][ni] = true; // Mark for redraw
       }
     }
   }
@@ -90,11 +80,8 @@ function drawGrid() {
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
-      if (dirtyMap[j][i] || tileCache[j][i] == null) {
-        tileCache[j][i] = getSector(j, i, cellSize);
-        dirtyMap[j][i] = false;
-      }
-      image(tileCache[j][i], offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
+      let tile = getSector(j, i, cellSize);
+      image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
       stroke(0, 25);
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
@@ -108,7 +95,7 @@ function getSector(row, col, cellSize) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
-  pg.textLeading(textSizeValue * 1.2); // spacing for multiline
+  pg.textLeading(textSizeValue * 1.2); // smooth line spacing
 
   let nudgeX = (col - xNudgeCells) * cellSize;
   let nudgeY = (row - yNudgeCells) * cellSize;
@@ -139,5 +126,5 @@ function windowResized() {
   canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
   getTextHeight();
-  initDirtyMap(); // Redraw all tiles
+  drawGrid();
 }
