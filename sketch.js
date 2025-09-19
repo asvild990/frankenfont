@@ -7,6 +7,8 @@ let canvasW, canvasH, textSizeValue;
 let xNudgeCells = 2;
 let yNudgeCells = 4;
 let freezeMap = [];
+let dirtyMap = [];
+let tileCache = [];
 let freezeRadius = 2;
 let liveCycleRadius = 2;
 
@@ -18,7 +20,8 @@ function setup() {
   initFontGrid();
   getTextHeight();
   initFreezeMap();
-  frameRate(4);
+  initTileCache();
+  frameRate(4); // Feel free to tweak
 }
 
 function initFontGrid() {
@@ -33,8 +36,19 @@ function initFontGrid() {
 function initFreezeMap() {
   for (let j = 0; j < rows; j++) {
     freezeMap[j] = [];
+    dirtyMap[j] = [];
     for (let i = 0; i < cols; i++) {
       freezeMap[j][i] = false;
+      dirtyMap[j][i] = true; // mark all dirty to start
+    }
+  }
+}
+
+function initTileCache() {
+  for (let j = 0; j < rows; j++) {
+    tileCache[j] = [];
+    for (let i = 0; i < cols; i++) {
+      tileCache[j][i] = null; // placeholder for PGraphics
     }
   }
 }
@@ -53,18 +67,14 @@ function draw() {
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
 
-  // Live-cycle: continually randomize fonts near cursor, but not all at once
+  // Only update fonts in live cycle area
   for (let j = -liveCycleRadius; j <= liveCycleRadius; j++) {
     for (let i = -liveCycleRadius; i <= liveCycleRadius; i++) {
       let ni = col + i;
       let nj = row + j;
-      if (
-        ni >= 0 && ni < cols &&
-        nj >= 0 && nj < rows &&
-        !freezeMap[nj][ni] &&
-        random(1) < 0.5  // 50% chance to update
-      ) {
+      if (ni >= 0 && ni < cols && nj >= 0 && nj < rows && !freezeMap[nj][ni]) {
         fontGrid[nj][ni] = random(fonts);
+        dirtyMap[nj][ni] = true;
       }
     }
   }
@@ -80,8 +90,11 @@ function drawGrid() {
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
-      let tile = getSector(j, i, cellSize);
-      image(tile, offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
+      if (dirtyMap[j][i]) {
+        tileCache[j][i] = getSector(j, i, cellSize);
+        dirtyMap[j][i] = false;
+      }
+      image(tileCache[j][i], offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
       stroke(0, 25);
       noFill();
       rect(offsetX + i * cellSize, offsetY + j * cellSize, cellSize, cellSize);
@@ -95,8 +108,7 @@ function getSector(row, col, cellSize) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
-  pg.textLeading(textSizeValue * 1.2); // smooth line spacing
-
+  pg.textLeading(textSizeValue * 1.2); // Smooth multiline spacing
   let nudgeX = (col - xNudgeCells) * cellSize;
   let nudgeY = (row - yNudgeCells) * cellSize;
   pg.text(message, -nudgeX, -nudgeY);
@@ -116,6 +128,7 @@ function mousePressed() {
       let nj = row + j;
       if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
         freezeMap[nj][ni] = true;
+        dirtyMap[nj][ni] = true;
       }
     }
   }
@@ -126,5 +139,9 @@ function windowResized() {
   canvasH = windowHeight;
   resizeCanvas(canvasW, canvasH);
   getTextHeight();
-  drawGrid();
+  for (let j = 0; j < rows; j++) {
+    for (let i = 0; i < cols; i++) {
+      dirtyMap[j][i] = true; // mark all dirty again
+    }
+  }
 }
