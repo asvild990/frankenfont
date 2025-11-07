@@ -55,14 +55,14 @@ function initTileCache() {
 
 function getTextHeight() {
   textFont("Futura");
-  textSizeValue = canvasW * 0.20;
+  textSizeValue = canvasW * 0.15;
   textSize(textSizeValue);
 }
 
 function draw() {
   let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 2;
-  let offsetY = (canvasH - rows * cellSize) / 2;
+  let offsetX = (canvasW - cols * cellSize) / 1;
+  let offsetY = (canvasH - rows * cellSize) / 1;
 
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
