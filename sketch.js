@@ -4,8 +4,8 @@ let cols = 24;
 let rows = 18;
 let fontGrid = [];
 let canvasW, canvasH, textSizeValue;
-let xNudgeCells = 1.5;
-let yNudgeCells = 1.5;
+let xNudgeCells = 1;
+let yNudgeCells = 1;
 let freezeMap = [];
 let dirtyMap = [];
 let tileCache = [];
@@ -85,8 +85,8 @@ function draw() {
 function drawGrid() {
   background("#F3F3F3");
   let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 1;
-  let offsetY = (canvasH - rows * cellSize) / 1;
+  let offsetX = (canvasW - cols * cellSize) / 2;
+  let offsetY = (canvasH - rows * cellSize) / 2;
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
