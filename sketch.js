@@ -61,8 +61,8 @@ function getTextHeight() {
 
 function draw() {
   let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 1;
-  let offsetY = (canvasH - rows * cellSize) / 1;
+  let offsetX = (canvasW - cols * cellSize) / 0.55;
+  let offsetY = (canvasH - rows * cellSize) / 0.55;
 
   let col = floor((mouseX - offsetX) / cellSize);
   let row = floor((mouseY - offsetY) / cellSize);
