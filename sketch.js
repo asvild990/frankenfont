@@ -1,5 +1,5 @@
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
-let message = "And\nFeel Good";
+let message = "Let's Make\nSomething\nCool\nTogether!";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
@@ -55,7 +55,7 @@ function initTileCache() {
 
 function getTextHeight() {
   textFont("Futura");
-  textSizeValue = canvasW * 0.16;
+  textSizeValue = canvasW * 0.14;
   textSize(textSizeValue);
 }
 
