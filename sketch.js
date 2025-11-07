@@ -4,13 +4,13 @@ let cols = 24;
 let rows = 18;
 let fontGrid = [];
 let canvasW, canvasH, textSizeValue;
-let xNudgeCells = .45;
-let yNudgeCells = .45;
+let xNudgeCells = .25;
+let yNudgeCells = .25;
 let freezeMap = [];
 let dirtyMap = [];
 let tileCache = [];
 let freezeRadius = 2;
-let liveCycleRadius = 2;
+let liveCycleRadius = 1;
 
 function setup() {
   canvasW = windowWidth;
@@ -108,7 +108,7 @@ function getSector(row, col, cellSize) {
   pg.textFont(fontGrid[row][col]);
   pg.textAlign(LEFT, TOP);
   pg.textSize(textSizeValue);
-  pg.textLeading(textSizeValue * 1.2); // Smooth multiline spacing
+  pg.textLeading(textSizeValue * 1.10); // Smooth multiline spacing
   let nudgeX = (col - xNudgeCells) * cellSize;
   let nudgeY = (row - yNudgeCells) * cellSize;
   pg.text(message, -nudgeX, -nudgeY);
