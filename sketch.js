@@ -85,8 +85,8 @@ function draw() {
 function drawGrid() {
   background("#F3F3F3");
   let cellSize = min(canvasW / cols, canvasH / rows);
-  let offsetX = (canvasW - cols * cellSize) / 2;
-  let offsetY = (canvasH - rows * cellSize) / 2;
+  let offsetX = (canvasW - cols * cellSize) / 1;
+  let offsetY = (canvasH - rows * cellSize) / 1;
 
   for (let j = 0; j < rows; j++) {
     for (let i = 0; i < cols; i++) {
