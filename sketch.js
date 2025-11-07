@@ -1,11 +1,11 @@
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
-let message = "And\n Feel Good";
+let message = "And\nFeel Good";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
 let canvasW, canvasH, textSizeValue;
 let xNudgeCells = 1.5;
-let yNudgeCells = 3;
+let yNudgeCells = 1.5;
 let freezeMap = [];
 let dirtyMap = [];
 let tileCache = [];
