@@ -1,5 +1,5 @@
 let fonts = ["Futura", "Didot", "Verdana", "Baskerville", "Avenir", "Gill Sans", "Source Code Pro", "Cooper", "Helvetica", "Rockwell"];
-let message = "Making Things\nMake Sense";
+let message = "And\n Feel Good";
 let cols = 24;
 let rows = 18;
 let fontGrid = [];
