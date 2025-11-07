@@ -55,7 +55,7 @@ function initTileCache() {
 
 function getTextHeight() {
   textFont("Futura");
-  textSizeValue = canvasW * 0.14;
+  textSizeValue = canvasW * 0.16;
   textSize(textSizeValue);
 }
 
